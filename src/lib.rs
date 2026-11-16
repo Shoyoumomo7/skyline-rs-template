@@ -1,5 +1,3 @@
-#![feature(concat_idents)]
-#![feature(proc_macro_hygiene)]
 
 use smash::{
     app::{sv_animcmd, sv_math, sv_system, utility},
