@@ -1,36 +1,31 @@
-name: Create Release
+name: Rust
 
 on:
-  workflow_dispatch:
   push:
     branches: [ main, smash_smashline ]
-
-env:
-  PLUGIN_NAME: smashline_test
+  workflow_dispatch:
 
 jobs:
   build-release:
     runs-on: ubuntu-latest
-    container:
-      image: jugeeya/cargo-skyline:3.0.0-dkp-beta
     steps:
-      - uses: actions/checkout@v3.1.0
+      - uses: actions/checkout@v4
+
+      - name: Install Rust nightly
+        run: |
+          rustup toolchain install nightly
+          rustup default nightly
+
+      - name: Install cargo-skyline
+        run: cargo install cargo-skyline --locked
+
       - name: Build Release NRO
         run: |
-          PATH=$PATH:/root/.cargo/bin:/opt/devkitpro/devkitA64/bin /root/.cargo/bin/cargo-skyline skyline build --release
-        env:
-          HOME: /root
-      # uncomment if you want to upload this to your repository automatically.
-      # - name: Update Release
-      #   uses: meeDamian/github-release@2.0
-      #   with:
-      #     token: ${{ secrets.GITHUB_TOKEN }}
-      #     prerelease: false
-      #     allow_override: true
-      #     gzip: false
-      #     tag: beta
-      #     name: beta
-      #     body: >
-      #       Beta built off of the latest code in the repository. 
-      #     files: >
-      #       target/aarch64-skyline-switch/release/lib${{env.PLUGIN_NAME}}.nro
+          yes | cargo skyline update-std || true
+          cargo skyline build --release
+
+      - name: Upload NRO
+        uses: actions/upload-artifact@v4
+        with:
+          name: random-attack-values-nro
+          path: target/aarch64-skyline-switch/release/*.nro
