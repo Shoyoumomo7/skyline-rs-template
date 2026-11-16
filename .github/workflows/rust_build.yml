@@ -1,8 +1,9 @@
 name: Create Release
 
 on:
+  workflow_dispatch:
   push:
-    branches: [ main ]
+    branches: [ main, smash_smashline ]
 
 env:
   PLUGIN_NAME: smashline_test
