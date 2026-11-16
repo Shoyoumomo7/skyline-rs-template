@@ -54,3 +54,4 @@ unsafe fn attack_replace(lua_state: u64) {
 pub fn main() {
     skyline::install_hooks!(attack_replace);
 }
+
